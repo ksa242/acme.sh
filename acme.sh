@@ -1542,12 +1542,12 @@ _durl_replace_base64() {
 
 _time2str() {
   #BSD
-  if date -u -r "$1" 2>/dev/null; then
+  if date -u -r "$1" '+%FT%TZ' 2>/dev/null; then
     return
   fi
 
   #Linux
-  if date -u -d@"$1" 2>/dev/null; then
+  if date -u -d@"$1" '+%FT%TZ' 2>/dev/null; then
     return
   fi
 
@@ -1558,7 +1558,7 @@ _time2str() {
   fi
 
   #Busybox
-  if echo "$1" | awk '{ print strftime("%c", $0); }' 2>/dev/null; then
+  if echo "$1" | awk '{ print strftime("%FT%TZ", $0); }' 2>/dev/null; then
     return
   fi
 }
@@ -1700,7 +1700,7 @@ _time() {
 }
 
 _utc_date() {
-  date -u "+%Y-%m-%d %H:%M:%S"
+  date -u "+%FT%TZ"
 }
 
 _mktemp() {
@@ -4912,7 +4912,7 @@ $_authorizations_map"
   Le_CertCreateTime=$(_time)
   _savedomainconf "Le_CertCreateTime" "$Le_CertCreateTime"
 
-  Le_CertCreateTimeStr=$(date -u)
+  Le_CertCreateTimeStr=$(date -u '+%FT%TZ')
   _savedomainconf "Le_CertCreateTimeStr" "$Le_CertCreateTimeStr"
 
   if [ -z "$Le_RenewalDays" ] || [ "$Le_RenewalDays" -lt "0" ]; then
